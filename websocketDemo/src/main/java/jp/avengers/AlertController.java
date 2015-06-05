@@ -20,29 +20,10 @@ public class AlertController {
 	@SendTo("/topic/alert")
 	public Alert alert(AlertMessage message) throws Exception {
 		Thread.sleep(3000);
-//		return new Alert();
 		return new Alert("demo, " + message.getName() + "!");
-//		return readJsonDataFile("alertData.json") ;
 	}
 
-//	
-//	// 注意喚起一覧 データ	
-//		@RequestMapping(value="category-Alert", method=RequestMethod.GET, produces = "application/json")
-//		public String alertDataRead(Model model){
-//
-//			return readJsonDataFile("alertData.json") ;
-//		}
-//		
-//		protected String filePath = "C:\\Users\\hong_s\\Documents\\demo\\websocketDemo\\src\\main\\resources\\static\\data\\";
-//		protected String readJsonDataFile(String fileName) {
-//			try {
-//				return new String(Files.readAllBytes(Paths.get(filePath + fileName)), StandardCharsets.UTF_8);
-//			} catch (IOException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//			return null;
-//		}
+
 	@RequestMapping("/test")
 	public String test() {
 		return "test";
