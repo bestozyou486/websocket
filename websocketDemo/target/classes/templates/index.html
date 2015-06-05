@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"/>
+<title>Hello WebSocket</title>
+    <script src="./js/sockjs-0.3.4.js"></script>
+    <script src="./js/stomp.js"></script>
+    <script type="text/javascript">
+        var stompClient = null;
+
+        function setConnected(connected) {
+        	/**
+             * 初期化処理
+             */
+            document.getElementById('connect').disabled = connected;
+            document.getElementById('disconnect').disabled = !connected;
+            document.getElementById('conversationDiv').style.visibility = connected ? 'visible' : 'hidden';
+            document.getElementById('response').innerHTML = '';
+        }
+
+        function connect() {
+        	
+            var socket = new SockJS('/aisatu');// エンドポイントのURL
+            stompClient = Stomp.over(socket);// WebSocketを使ったStompクライアントを作成
+            stompClient.connect({}, function(frame) {// エンドポイントに接続し、接続した際のコールバックを登録
+                setConnected(true);
+                console.log('Connected: ' + frame);
+                stompClient.subscribe('/topic/alert', function(alert){
+                    showAlert(JSON.parse(alert.body).content);
+                });
+            });
+        }
+
+        /**
+         * 接続切断処理
+         */
+        function disconnect() {
+            if (stompClient != null) {
+                stompClient.disconnect();
+            }
+            setConnected(false);
+            console.log("Disconnected");
+        }
+        /**
+         * 宛先'/alert/aisatu'へのメッセージ送信処理
+         */
+        function sendName() {
+            var name = document.getElementById('name').value;
+            stompClient.send("/alert/aisatu", {}, JSON.stringify({ 'name': name }));
+        }
+
+        /**
+         * 宛先'/topic/faces!!???'なメッセージを受信したときの処理
+         */
+        function showAlert(message) {
+            var response = document.getElementById('response');
+            var p = document.createElement('p');
+            p.style.wordWrap = 'break-word';
+            p.appendChild(document.createTextNode(message));
+            response.appendChild(p);
+        }
+        
+        /*
+        var response = document.getElementById('response');
+        var img = document.createElement('img');
+        img.setAttribute("src", "data:image/png;base64," + message.body);
+        response.insertBefore(img, response.children[0]);
+        */
+        
+    </script>
+</head>
+<body onload="disconnect()"><!-- onload="disconnect()" -->
+
+<div>
+    <div>
+        <button id="connect" onclick="connect();">Connect</button>
+        <button id="disconnect" disabled="disabled" onclick="disconnect();">Disconnect</button><br/><br/>
+    </div>
+
+    <div id="conversationDiv">
+        <label>input :</label><input type="text" id="name" />
+        <button id="sendName" onclick="sendName();">Send</button>
+        <p id="response"></p>
+    </div>
+
+</div>
+</body>
+</html>

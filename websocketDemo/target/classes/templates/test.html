@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+	<head>
+        <meta charset="utf-8"/>
+        <title>AngularJS incremental search demo</title>
+        <script src="./js/vendor/angular.min.js"></script>
+        <script src="./js/test.js"></script>
+	</head>
+	<body>
+        <div ng-controller="demoCtrl">
+	        <section ng-repeat="alert in alertData" class="alertList"  >
+				<ul>
+					<li>
+			
+						<b>{{ alert.title }}</b>{{ alert.content }}
+					</li>
+				</ul>
+			</section>
+        </div>
+	        
+	        
+	</body>
+</html>
